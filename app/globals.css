@@ -1,26 +1,119 @@
+/* Tailwind v4 */
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
+/* ── TOKENS ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --brand-500: #7c3aed;
+  --brand-600: #6d28d9;
+
+  --bg: #ffffff;
+  --text: #111827;   /* gray-900 */
+  --muted: #6b7280;  /* gray-500 */
+  --border: #e5e7eb; /* gray-200 */
+}
+.dark {
+  --bg: #0b0b10;
+  --text: #f3f4f6;   /* gray-100 */
+  --muted: #9ca3af;  /* gray-400 */
+  --border: #1f2937; /* gray-800 aprox. */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* ── BASE ───────────────────────────────────────────── */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --font-sans: var(--font-sans, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, Noto Sans, "Apple Color Emoji","Segoe UI Emoji");
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); }
+
+  a { text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+
+  h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.1; }
+}
+
+/* ── COMPONENTES UTIL ───────────────────────────────── */
+@layer components {
+  /* Headings */
+  .heading-1 { @apply text-4xl sm:text-5xl font-extrabold tracking-tight; color: var(--brand-600); }
+  .heading-2 { @apply text-3xl sm:text-4xl font-bold; color: var(--brand-600); }
+  .heading-3 { @apply text-2xl font-semibold; color: var(--brand-500); }
+  .heading-4 { @apply text-xl font-semibold text-gray-800 dark:text-gray-200; }
+  .heading-5 { @apply text-lg font-semibold text-gray-800/90 dark:text-gray-200/90; }
+  .heading-6 { @apply text-base font-semibold text-gray-700 dark:text-gray-300; }
+
+  /* Texto */
+  .text-body  { @apply text-base leading-relaxed text-gray-800 dark:text-gray-200; }
+  .text-muted { color: var(--muted); }
+
+  /* Container fluido */
+  .site-wrap { @apply max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8; }
+
+  /* Botões */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           rounded-lg px-4 py-2 text-sm font-semibold
+           transition-[background,color,transform,box-shadow] duration-200
+           focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-500)]/50;
+  }
+  .btn-primary {
+    @apply text-white bg-[color:var(--brand-600)]
+           hover:bg-[color:var(--brand-500)]
+           active:translate-y-[1px] shadow-sm hover:shadow;
+  }
+  .btn-gradient {
+    color: #fff;
+    background-image: linear-gradient(135deg, var(--brand-600) 0%, #7c3aed 55%, #8b5cf6 100%);
+    box-shadow: 0 10px 24px -12px rgba(124,58,237,.65);
+  }
+  .btn-gradient:hover { box-shadow: 0 12px 28px -10px rgba(124,58,237,.75); transform: translateY(-1px); }
+  .btn-ghost { @apply text-[color:var(--brand-600)] hover:bg-[color:var(--brand-500)]/12; }
+  .btn:disabled { @apply opacity-60 cursor-not-allowed shadow-none transform-none; }
+
+  /* Cards (CLARO x ESCURO unificados) */
+  .card {
+    /* Claro: fundo branco translúcido + borda clara + sombra leve */
+    @apply rounded-xl border border-gray-200 bg-white/90 transition shadow-sm;
+    /* Escuro: fundo cinza translúcido + borda escura */
+    @apply dark:border-gray-700/80 dark:bg-gray-800/30;
+  }
+  .card:hover {
+    @apply shadow-md dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)] border-[color:var(--brand-500)]/30;
+  }
+  .card-body { @apply p-6; }
+
+  /* Navbar */
+  .nav-surface {
+    @apply sticky top-0 z-50 backdrop-blur-md border-b;
+    border-color: var(--border);
+    box-shadow: 0 12px 30px -12px rgba(0,0,0,0.6);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.45));
+  }
+  .nav-surface::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--brand-500), transparent);
+    opacity: .35; pointer-events: none;
+  }
+  .nav-link {
+    @apply inline-flex items-center rounded-2xl px-4 py-2.5 text-sm font-semibold
+           text-gray-300 hover:text-white
+           transition-[color,background,transform,box-shadow] duration-200
+           hover:bg-white/5 hover:-translate-y-[1px]
+           focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-500)]/50;
+  }
+  .nav-pill {
+    @apply text-white ring-1 ring-white/10;
+    background-image: linear-gradient(135deg, var(--brand-600) 0%, #7c3aed 45%, #8b5cf6 100%);
+    box-shadow: 0 10px 25px -12px rgba(124,58,237,.65), inset 0 1px 0 rgba(255,255,255,.08);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── TYPOGRAPHY PLUGIN AJUSTES ───────────────────────── */
+/* Links normais dentro da prose, EXCETO os que são botões */
+.prose :where(a):not(.btn):not([class*="btn-"]):not(.button) {
+  color: var(--brand-600);
 }
+/* Não mexer na cor dos botões dentro da prose; remover só o sublinhado */
+.prose a.btn,
+.prose a[class*="btn-"] { text-decoration: none; }

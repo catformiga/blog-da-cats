@@ -1,103 +1,134 @@
-import Image from "next/image";
+// app/page.tsx
+// ---------------------------------------------
+// Home — Blog da Cats
+// Mantém estrutura; melhora contraste dos cards
+// e do botão "Ler mais" (.btn/.btn-gradient no globals.css).
+// ---------------------------------------------
 
-export default function Home() {
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { getPosts } from "./data/posts";
+import Footer from "@/app/components/Footer";
+import PageWrapper from "@/app/components/PageWrapper";
+
+// ── SEO
+export const metadata: Metadata = {
+  title: "Blog da Cats 🐾 | Psicologia, Games e Doramas",
+  description:
+    "Um cantinho aconchegante onde se misturam psicologia, games, doramas, gatos e crescimento pessoal.",
+  keywords: [
+    "psicologia",
+    "games",
+    "doramas",
+    "blog",
+    "gatos",
+    "crescimento pessoal",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Blog da Cats 🐾 | Psicologia, Games e Doramas",
+    description:
+      "Resenhas, reflexões e histórias que tocam o coração — com aquela pitada gamer.",
+    url: "/",
+    siteName: "Blog da Cats",
+    type: "website",
+    images: [
+      {
+        url: "/og/home.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Blog da Cats - Psicologia, Games e Doramas",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog da Cats 🐾 | Psicologia, Games e Doramas",
+    description:
+      "Resenhas, reflexões e histórias que tocam o coração — com aquela pitada gamer.",
+    images: ["/og/home.jpg"],
+  },
+  icons: { icon: "/favicon.ico", shortcut: "/favicon.ico" },
+};
+
+// ── Helper para decidir o destino do "Ler mais"
+type PostItem = { title: string; slug: string; category?: string | null };
+
+function getReadMoreHref(post: PostItem): string {
+  if (post.category) return `/${post.category}`;
+  const t = post.title.trim().toLowerCase();
+  if (t === "life is strange e a psicologia: escolhas que curam")
+    return "/games-e-emocoes";
+  if (t === "o dorama que mudou minha visão sobre empatia")
+    return "/doramas-e-series";
+  return `/posts/${post.slug}`;
+}
+
+// ── Página
+export default async function HomePage() {
+  const posts = await getPosts();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <PageWrapper>
+      {/* Título principal */}
+      <h1 className="text-[color:var(--brand-600)]">
+        Seja muito bem-vindo(a) ao Blog da Cats! 🐾
+      </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      {/* Subtítulo com contraste correto no light/dark */}
+      <p className="text-center text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12">
+        Aqui é um cantinho aconchegante onde misturo o que amo: psicologia,
+        games, doramas, gatos e a jornada de crescimento pessoal. Sinta-se em
+        casa! 💖
+      </p>
+
+      {/* LISTA DE POSTS — not-prose evita que a tipografia estilize <a> */}
+      <section className="not-prose grid gap-6 sm:grid-cols-2">
+        {posts.map((post) => {
+          const href = getReadMoreHref(post);
+
+          return (
+            <article
+              key={post.slug}
+              className="card p-6 hover:shadow-md hover:border-[color:var(--brand-500)]/40 transition"
+            >
+              {/* Título do post com cor da identidade */}
+              <h2 className="text-2xl font-semibold text-[color:var(--brand-600)] mb-2">
+                {post.title}
+              </h2>
+
+              {/* Data com contraste ok no light/dark */}
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                {new Date(post.date).toLocaleDateString("pt-BR")}
+              </p>
+
+              {/* Resumo legível nos dois temas */}
+              <p className="text-gray-700 dark:text-gray-300/90 leading-relaxed mb-6">
+                {post.summary}
+              </p>
+
+              {/* Botão "Ler mais" com alto contraste */}
+              <Link
+                href={href}
+                aria-label={`Ler mais sobre: ${post.title}`}
+                className="btn btn-gradient no-underline mt-2 group"
+              >
+                Ler mais
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </Link>
+              {/* Se preferir sólido:
+                  className="btn btn-primary no-underline mt-2 group"
+              */}
+            </article>
+          );
+        })}
+      </section>
+
+      {/* Rodapé */}
+      <div className="not-prose mt-12">
+        <Footer />
+      </div>
+    </PageWrapper>
   );
 }
